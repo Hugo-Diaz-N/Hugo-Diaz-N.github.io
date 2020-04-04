@@ -49,6 +49,8 @@ print('The sum of {0} and {1} is {2}'.format(num1, num2, sum))
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
+[Languages supported by Jekyll](https://simpleit.rocks/ruby/jekyll/what-are-the-supported-language-highlighters-in-jekyll/)  
+
 ### Jekyll Themes
 
 Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Hugo-Diaz-N/Hugo-Diaz-N.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
