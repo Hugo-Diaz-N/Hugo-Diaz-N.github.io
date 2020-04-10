@@ -179,7 +179,43 @@ def fem_1d(xx, k, cf, rho, bc, f, bval):
     uh[free] = spsolve(ss[free, :][:, free], b[free])
     return uh
 ```
+### Plotting Tool
+```py
+def plotting_tool(x, k, fh):  # plots fh on a fine mesh  https://matplotlib.org/users/pyplot_tutorial.html
+    n_elt = np.size(x)-1
+    t = np.linspace(-1.0, 1.0, num=40)  # num points on each interval of the partition
+    pts = quad_points(x, t)
+    p_si, p_sip = polynomial_basis(k, t)
+    l2g = dof(n_elt, k)
+    l2g = fh[l2g]  # split by row
+    l2g = np.reshape(l2g, (k+1, n_elt))
+    fh = p_si @ l2g
+    pts = pts.flatten('F')
+    fh = fh.flatten('F')
+    plt.xlabel('Domain')
+    plt.ylabel(' ')
+    plt.title('Discrete solution')
+    plt.plot(pts, fh, '-b')  # plt.plot(t1, f(t1), 'bo', t2, f(t2), 'k')
+    plt.show()
+    return 0
+```
+### $$L^2-$$ projection with the measure $$d\mu=\rho(x)dx$$
+```py
+def l2_projection(xx, k, rho, f):
+    rho_f = lambda x: f(x) * rho(x)
+    mm = mass_matrix(rho, xx, k)
+    mm = assemble(mm)
+    b = testing(rho_f, xx, k)
+    b = vector_assemble(b)
+    fh = spsolve(mm, b)
+    return fh
+```
 
+###
+   
+
+    
+    
 
 
 You can use the [editor on GitHub](https://github.com/Hugo-Diaz-N/Hugo-Diaz-N.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
