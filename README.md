@@ -122,7 +122,7 @@ def dof(n_elt, k):   # local-to-global operator (k+1) x Nelt matrix.
     l2g = ((k * l2g) * col)+g
     return l2g-1
 ```
-### Assembly 
+### Assembly Mass Matrix or Stiffness Matrix
 ```py
 def assemble(w):  # Assembly of W, W is (k+1) x (k+1) x Nelt (Numpy shape (Nelt,k+1,k+1))
     dim = w.shape
@@ -141,6 +141,46 @@ def assemble(w):  # Assembly of W, W is (k+1) x (k+1) x Nelt (Numpy shape (Nelt,
     ww = csc_matrix((w, (rows, cols)), shape=(n_el*k+1, n_el*k+1))
     return ww
 ```
+### Assembly load vector
+```py
+def vector_assemble(w):  # Assembly of W, load vector Numpy (k+1,n_el) : similar to accumarray Matlab
+    dim = w.shape
+    n_el = dim[1]               # dim(end)
+    k = dim[0]-1
+    l2g = dof(n_el, k).flatten('F')
+    w = w.flatten('F')
+    ww = np.zeros((k*n_el+1, 1)).flatten('F')     # k*n_el+1 = dimension space (system size)
+    np.add.at(ww, l2g, w)
+    return ww
+```
+### Solver for $$ (cf(x)u'(x))'+\rho(x)u(x)=f(x)$$ plus boundary conditions. D: Dirichlet, N: Neumann
+```py
+def fem_1d(xx, k, cf, rho, bc, f, bval):
+    n_el = np.size(xx) - 1
+    n_dof = (n_el * k) + 1
+    free = np.arange(n_dof)
+    ss = assemble(stiffness_matrix(cf, xx, k) + mass_matrix(rho, xx, k))
+    b = vector_assemble(testing(f, xx, k))
+    if bc[0] == "N":
+        b[0] = b[0] + bval[0]
+    if bc[1] == "N":
+        b[1] = b[1] + bval[1]
+    uh = np.zeros((n_dof, 1)).flatten('F')
+    dir = []
+    if bc[0] == "D":
+        free = free[1:n_dof]
+        dir = [0]
+        uh[0] = bval[0]
+    if bc[1] == "D":
+        free = free[0:-1]
+        dir = dir+[n_dof-1]
+        uh[n_dof-1] = bval[1]
+    b = np.transpose(b) - (ss[:, dir] @ uh[dir]).flatten('F')
+    uh[free] = spsolve(ss[free, :][:, free], b[free])
+    return uh
+```
+
+
 
 You can use the [editor on GitHub](https://github.com/Hugo-Diaz-N/Hugo-Diaz-N.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
