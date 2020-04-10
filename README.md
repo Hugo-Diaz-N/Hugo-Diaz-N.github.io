@@ -238,7 +238,7 @@ def h1_semi_norm(xx, k, df, fh):
     error = np.sqrt(wts @ (rr @ np.transpose(hh)))
     return error
 ```    
-## Example (setting)
+## Example: $$u''(t)+u(t)=e^{-t}\cos(2\pi t)$$ with $$x\in (-2,3)$$, Dirichlet BC and using $$k=7$$. 
 ```py
 def rho(t):   # t must be a (n, m) Numpy array
     dim = np.shape(t)
@@ -269,6 +269,15 @@ bval = np.array([1, 5])
 %timeit  fem_1d(x, k, cf, rho, bc, f, bval)
 ```
 Output for this example:  $$11.7ms \pm 207 \mu s$$ per loop (mean $$\pm$$ std. dev. of 7 runs, 100 loops each)
+###  Discrete Solution  
+```py
+uh = fem_1d(x, k, cf, rho, bc, f, bval)
+```
+###  Plotting $$u_h(t)$$
+```py
+plotting_tool(x, k, uh)
+```
+
 
     
     
