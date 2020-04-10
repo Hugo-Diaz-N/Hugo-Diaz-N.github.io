@@ -1,3 +1,4 @@
+<!-- This can be hide, original code: http://zjuwhw.github.io/2017/06/04/MathJax.html --> 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   tex2jax: {
@@ -7,9 +8,10 @@ MathJax.Hub.Config({
 });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-# A 1D Higher Order Finite Element Code
-This is a "simple" implementation  $$mean = \frac{\displaystyle\sum_{i=1}^{n} x_{i}}{n}$$
+
+# A Higher Order  1D Finite Element Code for $$H^1(a,b)$$
 ## Welcome to GitHub Pages
+This is a "simple" implementation  
 
 You can use the [editor on GitHub](https://github.com/Hugo-Diaz-N/Hugo-Diaz-N.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
