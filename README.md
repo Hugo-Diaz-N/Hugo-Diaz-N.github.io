@@ -68,7 +68,7 @@ def testing(f, xx, k):  # returns a (k+1)x(No. of elements) matrix
     aa = hh * (np.transpose(aa) @ f(quad_points(xx, t)))
     return aa
 ```
-### Mass Matrix
+### Mass Matrix ( $$d\mu =\rho(x)dx$$)
 ```py
 def mass_matrix(rho, xx, k):    # Output: A := (k+1) x (k +1) x (No. of elements) matrix (Numpy order is different)
                                 # x must be an (1, n) array,
@@ -87,6 +87,59 @@ def mass_matrix(rho, xx, k):    # Output: A := (k+1) x (k +1) x (No. of elements
     aa = np.transpose(aa)
     aa = aa.reshape(n_el, k+1, k+1, order='C')
     return aa
+```
+### Stiffness Matrix ( $$d\mu =c(x)dx$$)
+```py
+def stiffness_matrix(c, xx, k):     # Output: A := (k+1) x (k +1) x (No. of elements) matrix (Numpy order is different)
+                                    # x must be an (1, n) array,
+                                    # c: vectorized function, the output must have same shape than input.
+                                    # k: poly degree
+    n_el = np.size(xx) - 1
+    hh = 0.5 * (xx[:, 1:n_el + 1] - xx[:, 0:n_el])
+    n_qd = int(np.ceil(1.5 * k))                     # np.ceil returns a float64
+    points, weights = gaussian_quad(n_qd)
+    _, p_sip = polynomial_basis(k, points)
+    cc = c(quad_points(xx, points))
+    cc = cc * (1/hh)                                 # Column-wise multiplication
+    aa = np.zeros((k + 1, (k + 1) * n_el))
+    for q in np.arange(n_qd, dtype=np.uint32):
+        aa = aa + np.kron(cc[q, :], weights[:, q] * np.outer(p_sip[q, :], p_sip[q, :]))
+    aa = np.transpose(aa)
+    aa = aa.reshape(n_el, k + 1, k + 1, order='C')
+    return aa
+```
+### Degrees of freedom (table)
+```py
+def dof(n_elt, k):   # local-to-global operator (k+1) x Nelt matrix.
+    # Last Modified Tuesday December 18 2018
+    l2g = np.ones([k+1, n_elt], dtype=np.uint32)   # zero-initialization, it works until 4.294.967.294 dof
+    g = np.arange(1, k + 2, dtype=np.uint32)        # g = [1 2 3 ··· k k+1]
+    g = np.roll(g, 1)                               # g = [k+1 1 2 3 ··· k]
+    g[0] = 1                                        # g = [1 1 2 3 ··· k]
+    g[1] = k + 1                                    # g = [1 k+1 2 3 ··· k]
+    g = np.reshape(g, (k+1, 1))
+    col = np.arange(0, n_elt)
+    l2g = ((k * l2g) * col)+g
+    return l2g-1
+```
+### Assembly 
+```py
+def assemble(w):  # Assembly of W, W is (k+1) x (k+1) x Nelt (Numpy shape (Nelt,k+1,k+1))
+    dim = w.shape
+    n_el = dim[0]
+    k = dim[1] - 1
+    l2g = dof(n_el, k).flatten('F')            # l2g(:)
+    l2g = np.reshape(l2g, ((k+1) * n_el, 1))   # col vector N x 1
+    cols = np.tile(l2g, k+1)
+    cols = np.reshape(cols, (n_el, k+1, k+1), order='C')
+    cols = np.transpose(cols, (0, 1, 2))
+    cols = np.moveaxis(cols, 1, 2)
+    rows = np.moveaxis(cols, 1, 2)
+    w = w.flatten('F')                         # w = w(:)
+    cols = cols.flatten('F')
+    rows = rows.flatten('F')
+    ww = csc_matrix((w, (rows, cols)), shape=(n_el*k+1, n_el*k+1))
+    return ww
 ```
 
 You can use the [editor on GitHub](https://github.com/Hugo-Diaz-N/Hugo-Diaz-N.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
