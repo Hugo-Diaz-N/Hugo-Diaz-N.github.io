@@ -277,10 +277,10 @@ uh = fem_1d(x, k, cf, rho, bc, f, bval)
 ```py
 plotting_tool(x, k, uh)
 ```
-Output
+### Output
+![this screenshot](DiscreteSol.png)
 
-
-    
+   
     
 
 
