@@ -9,9 +9,24 @@ MathJax.Hub.Config({
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
-# A Higher Order  1D Finite Element Code for $$H^1(a,b)$$
-## Welcome to GitHub Pages
-This is a "simple" implementation  
+# A High Order Finite Element Code for $$H^1(a,b)$$
+## IPython version
+
+This is a "simple" implementation for a high order FEM  for  $$H^1(a,b)$$. We use Lobatto functions   
+
+Python Code
+```py
+# ...Python code
+import numpy as np                       # package for scientific computing
+from scipy.linalg import eigh            # eigh : computes eigenvalues and eigenvectors for symmetric matrices
+from numpy.polynomial import Legendre    # Legendre : Legendre polynomials
+from scipy.sparse import csc_matrix      # csc_matrix : similar to sparse() in Matlab
+from scipy.sparse.linalg import spsolve  # spsolve : solves sparse linear systems AX = B
+import matplotlib.pyplot as plt          # package for plotting
+import cProfile                          # provide deterministic profiling
+```
+
+
 
 You can use the [editor on GitHub](https://github.com/Hugo-Diaz-N/Hugo-Diaz-N.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
@@ -44,20 +59,7 @@ Ruby Code
 print "Hello, World!\n"
 ```
 
-Python Code
-```py
-# ...Python code
-# This program adds two numbers
 
-num1 = 1.5
-num2 = 6.3
-
-# Add two numbers
-sum = float(num1) + float(num2)
-
-# Display the sum
-print('The sum of {0} and {1} is {2}'.format(num1, num2, sum))
-```
 
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
