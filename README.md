@@ -57,7 +57,7 @@ def quad_points(x, tt):  # integration pts in the physical elements; t quadratur
     aa = ((np.transpose(tt)+1)*h)+x[:, 0:n-1]
     return aa
 ```
-### "Testing": Returns a matrix with entries $$A_{ij} ~ \int_{[x_j x_{j+1}]} f(x)P_{i-1}dx$$
+### "Testing": Returns a matrix with entries $$A_{ij}  \approx \int_{[x_j x_{j+1}]} f(x)P_{i-1}dx$$
 ```py
 def testing(f, xx, k):  # returns a (k+1)x(No. of elements) matri
     n_el = np.size(xx) - 1
