@@ -14,11 +14,10 @@ MathJax.Hub.Config({
 
 This is a "simple" implementation for a high order FEM  for  $$H^1(a,b)$$. We use Lobatto functions   
 
-Python Code
+### Libraries
 ```py
-# ...Python code
 import numpy as np                       # package for scientific computing
-from scipy.linalg import eigh            # eigh : computes eigenvalues and eigenvectors for symmetric matrices
+from scipy.linalg import eigh            # eigenvalues and eigenvectors for symmetric matrices
 from numpy.polynomial import Legendre    # Legendre : Legendre polynomials
 from scipy.sparse import csc_matrix      # csc_matrix : similar to sparse() in Matlab
 from scipy.sparse.linalg import spsolve  # spsolve : solves sparse linear systems AX = B
