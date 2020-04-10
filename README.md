@@ -59,13 +59,33 @@ def quad_points(x, tt):  # integration pts in the physical elements; t quadratur
 ```
 ### "Testing": Returns a matrix with entries $$A_{ij}  \approx \int_{[x_j x_{j+1}]} f(x)P_{i-1}dx$$
 ```py
-def testing(f, xx, k):  # returns a (k+1)x(No. of elements) matri
+def testing(f, xx, k):  # returns a (k+1)x(No. of elements) matrix
     n_el = np.size(xx) - 1
     hh = 0.5 * (xx[:, 1:n_el + 1] - xx[:, 0:n_el])
     t, wts = gaussian_quad(k + 2)
     p_si, _ = polynomial_basis(k, t)
     aa = np.transpose(wts) * p_si
     aa = hh * (np.transpose(aa) @ f(quad_points(xx, t)))
+    return aa
+```
+### Mass Matrix
+```py
+def mass_matrix(rho, xx, k):    # Output: A := (k+1) x (k +1) x (No. of elements) matrix (Numpy order is different)
+                                # x must be an (1, n) array,
+                                # rho: vectorized function, the output must have same shape than input.
+                                # k: poly degree
+    n_el = np.size(xx) - 1
+    hh = 0.5 * (xx[:, 1:n_el+1]-xx[:, 0:n_el])
+    n_qd = int(np.ceil(1.5*k+0.5))
+    points, weights = gaussian_quad(n_qd)
+    p_si, _ = polynomial_basis(k, points)
+    rr = rho(quad_points(xx, points))
+    rr = rr * hh                                    # Column-wise multiplication
+    aa = np.zeros((k+1, (k+1)*n_el))
+    for q in np.arange(n_qd, dtype=np.uint32):
+        aa = aa + np.kron(rr[q, :], weights[:, q] * np.outer(p_si[q, :], p_si[q, :]))
+    aa = np.transpose(aa)
+    aa = aa.reshape(n_el, k+1, k+1, order='C')
     return aa
 ```
 
