@@ -24,7 +24,28 @@ from scipy.sparse.linalg import spsolve  # spsolve : solves sparse linear system
 import matplotlib.pyplot as plt          # package for plotting
 import cProfile                          # provide deterministic profiling
 ```
-
+### Basis Reference element $$[-1,1]$$
+```py
+def polynomial_basis(k, t):  # Lobatto functions of degree k at the points t
+    # Last Modified Friday December 21 2018
+    m = len(t)                                                             # length of t
+    leg = np.zeros([m, k + 1])
+    for kind in range(0, k+1):
+        leg[:, kind] = np.sqrt((2*kind+1) / 2) * Legendre.basis(kind)(t)   # Legendre Normalized poly at t
+    p = leg * np.sqrt(2.0 / (2 * np.arange(k + 1) + 1))
+    psi = np.zeros([m, k+1])
+    # Lobatto polynomial functions
+    psi[:, 0] = 0.5 * (1 - t)
+    psi[:, 1] = 0.5 * (1 + t)
+    correction = np.sqrt(1 / (2 * (2 * np.arange(2, k + 1) - 1)))
+    psi[:, 2:k + 1] = correction * (p[:, 2:k+1] - p[:, 0:k-1])
+    # derivative Lobatto polynomial functions
+    psi_p = np.zeros([m, k + 1])
+    psi_p[:, 0] = -0.5
+    psi_p[:, 1] = 0.5
+    psi_p[:, 2:k+1] = leg[:, 1:k]
+    return psi, psi_p
+```
 
 
 You can use the [editor on GitHub](https://github.com/Hugo-Diaz-N/Hugo-Diaz-N.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
