@@ -257,6 +257,19 @@ def f(t):
 def df(t):
     return -np.exp(-t) * (np.cos(2*np.pi*t) + 2*np.pi*np.sin(2*np.pi*t))
 ```
+```py
+x = np.linspace(-2.0, 3.0, num=300)
+x = np.reshape(x, (1, 300))
+k = 7
+bc = "DD"
+bval = np.array([1, 5])
+```
+###  Profile  
+```py
+%timeit  fem_1d(x, k, cf, rho, bc, f, bval)
+```
+Output for this example:  $$11.7ms \pm 207 \mu s$$ per loop (mean $$\pm$$ std. dev. of 7 runs, 100 loops each)
+
     
     
 
