@@ -10,6 +10,7 @@ MathJax.Hub.Config({
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
 # A High Order Finite Element Code for $$H^1(a,b)$$
+This code was developed during UNIDEL 2017 with Francisco-Javier Sayas and Connor Swalm. 
 ## IPython version
 
 This is a "simple" implementation for a high order FEM  for  $$H^1(a,b)$$. We use Lobatto functions   
@@ -279,53 +280,12 @@ plotting_tool(x, k, uh)
 ```
 ### Output
 ![this screenshot](DiscreteSol.png)
-
-   
-    
-
-
-You can use the [editor on GitHub](https://github.com/Hugo-Diaz-N/Hugo-Diaz-N.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+### Checking the error
+```py
+np.set_printoptions(precision=8)  # determine the way floating point numbers are displayed (Numpy)
+fh = l2_projection(x, k, rho, f)
+error = l2_norm(x, k, f, fh)
+print(error)
 ```
-Ruby Code
-```ruby
-# ...ruby code
-print "Hello, World!\n"
-```
+Output: 3.33565134e-14
 
-
-
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-[Languages supported by Jekyll](https://simpleit.rocks/ruby/jekyll/what-are-the-supported-language-highlighters-in-jekyll/)  
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Hugo-Diaz-N/Hugo-Diaz-N.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
