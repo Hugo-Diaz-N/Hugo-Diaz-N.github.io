@@ -210,10 +210,53 @@ def l2_projection(xx, k, rho, f):
     fh = spsolve(mm, b)
     return fh
 ```
+### $$L^2-$$ norm
+```py
+def l2_norm(xx, k, f, fh):
+    n_el = np.size(xx) - 1  # len(x) = 1
+    hh = 0.5 * (xx[:, 1:n_el + 1] - xx[:, 0:n_el])
+    t, wts = gaussian_quad(4 * k)
+    ff = f(quad_points(xx, t))
+    p_si, _ = polynomial_basis(k, t)
+    ffh = p_si @ fh[dof(n_el, k)]
+    rr = np.absolute(ff-ffh)
+    rr = np.power(rr, 2)
+    error = np.sqrt(wts @ (rr @ np.transpose(hh)))
+    return error
+``` 
+### $$H^1-$$ semi-norm
+```py
+def h1_semi_norm(xx, k, df, fh):
+    n_el = np.size(xx) - 1  # len(x) = 1
+    hh = 0.5 * (xx[:, 1:n_el + 1] - xx[:, 0:n_el])
+    t, wts = gaussian_quad(4 * k)
+    dff = df(quad_points(xx, t))
+    _, p_sip = polynomial_basis(k, t)
+    ffh = p_sip @ ((1 / hh) * fh[dof(n_el, k)])
+    rr = np.absolute(dff-ffh)
+    rr = np.power(rr, 2)
+    error = np.sqrt(wts @ (rr @ np.transpose(hh)))
+    return error
+```    
+## Example (setting)
+```py
+def rho(t):   # t must be a (n, m) Numpy array
+    dim = np.shape(t)
+    rh = np.ones((dim[0], dim[1]))
+    return rh
 
-###
-   
+def cf(t):   # t must be a (n, m) Numpy array
+    dim = np.shape(t)
+    rh = np.ones((dim[0], dim[1]))
+    return rh
 
+def f(t):
+    return np.exp(-t) * np.cos(2*np.pi*t)
+
+
+def df(t):
+    return -np.exp(-t) * (np.cos(2*np.pi*t) + 2*np.pi*np.sin(2*np.pi*t))
+```
     
     
 
