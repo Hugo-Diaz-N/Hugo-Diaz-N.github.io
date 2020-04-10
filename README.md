@@ -24,7 +24,7 @@ from scipy.sparse.linalg import spsolve  # spsolve : solves sparse linear system
 import matplotlib.pyplot as plt          # package for plotting
 import cProfile                          # provide deterministic profiling
 ```
-### Basis Reference element $$[-1,1]$$
+### Basis in the reference element $$[-1,1]$$.
 ```py
 def polynomial_basis(k, t):  # Lobatto functions of degree k at the points t
     # Last Modified Friday December 21 2018
@@ -46,7 +46,28 @@ def polynomial_basis(k, t):  # Lobatto functions of degree k at the points t
     psi_p[:, 2:k+1] = leg[:, 1:k]
     return psi, psi_p
 ```
-
+### Quadrature rule
+```py
+def quad_points(x, tt):  # integration pts in the physical elements; t quadrature points in (-1,1), x is the partition
+    # Last Modified Wednesday December 18 2018
+    n = np.size(x)
+    nqd = len(tt)
+    tt = tt.reshape((1, nqd))
+    h = 0.5 * (x[:, 1:n]-x[:, 0:n-1])
+    aa = ((np.transpose(tt)+1)*h)+x[:, 0:n-1]
+    return aa
+```
+### "Testing": Returns a matrix with entries $$A_{ij} ~ \int_{[x_j x_{j+1}]} f(x)P_{i-1}dx$$
+```py
+def testing(f, xx, k):  # returns a (k+1)x(No. of elements) matri
+    n_el = np.size(xx) - 1
+    hh = 0.5 * (xx[:, 1:n_el + 1] - xx[:, 0:n_el])
+    t, wts = gaussian_quad(k + 2)
+    p_si, _ = polynomial_basis(k, t)
+    aa = np.transpose(wts) * p_si
+    aa = hh * (np.transpose(aa) @ f(quad_points(xx, t)))
+    return aa
+```
 
 You can use the [editor on GitHub](https://github.com/Hugo-Diaz-N/Hugo-Diaz-N.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
