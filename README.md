@@ -14,7 +14,8 @@ MathJax.Hub.Config({
 
 
 # A High Order Finite Element Code for $$H^1(a,b)$$
-This code was developed during UNIDEL 2017 with Francisco-Javier Sayas and Connor Swalm. 
+The original version of this code (Matlab) was developed during UNIDEL 2017 with Francisco-Javier Sayas and Connor Swalm.
+## Disclaimer: This was my first code in Phyton, then I assume there are clever ways to do it.  
 ## IPython version
 
 This is a "simple" implementation for a high order FEM  for  $$H^1(a,b)$$. We use Lobatto functions   
