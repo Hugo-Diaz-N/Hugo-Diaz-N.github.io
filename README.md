@@ -243,7 +243,7 @@ def h1_semi_norm(xx, k, df, fh):
     error = np.sqrt(wts @ (rr @ np.transpose(hh)))
     return error
 ```    
-## Example: $$\begin{align*} u''(t)+u(t)=e^{-t}\cos(2\pi t)\\ \u \end{\align*}$$  $$u''(t)+u(t)=e^{-t}\cos(2\pi t)$$ with $$x\in (-2,3)$$, Dirichlet BC and using $$k=7$$. 
+## Example: $$u''(t)+u(t)=e^{-t}\cos(2\pi t) $$   with $$x\in (-2,3)$$, Dirichlet BC $$u(-2)=1$$ and $$u(3)=5$$, and  $$k=7$$. 
 ```py
 def rho(t):   # t must be a (n, m) Numpy array
     dim = np.shape(t)
