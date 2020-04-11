@@ -16,9 +16,9 @@ MathJax.Hub.Config({
 # A High Order Finite Element Code for $$H^1(a,b)$$
 The original version of this code (Matlab) was developed during UNIDEL 2017 with Francisco-Javier Sayas and Connor Swalm.
 ## Disclaimer: This was my first code in Phyton, then I assume there are clever ways to do it.  
-## IPython version
+## IPython version, tested on jupyter notebook 5.7.4.
 
-This is a "simple" implementation for a high order FEM  for  $$H^1(a,b)$$. We use Lobatto functions   
+This is a "simple" implementation for a high order FEM  for  $$H^1(a,b)$$. We use Lobatto functions, and the Golub-Welsch algorithm $$ (\mathcal{O}(n^2))$$ for the qudrature rule.   
 <!-- Lenguages supported by Jekyll https://simpleit.rocks/ruby/jekyll/what-are-the-supported-language-highlighters-in-jekyll/-->
 ### Libraries
 ```py
@@ -52,7 +52,22 @@ def polynomial_basis(k, t):  # Lobatto functions of degree k at the points t
     psi_p[:, 2:k+1] = leg[:, 1:k]
     return psi, psi_p
 ```
-### Quadrature rule
+### Quadrature rule on the reference element
+```py
+def gaussian_quad(n):  # Gauss quadrature nodes and weights, exact for polynomial functions up to  2n-1
+    # Last Modified Friday December 21 2018
+    y = np.arange(2, 2*n, 2)                     # y : Numpy array,  y = 2 * [1 2 3 ... n-1]
+    y = np.power(y, 2)                           # y^2  component-wise
+    y = np.sqrt(y - 1.0)
+    y = np.divide(np.arange(1, n), y)            # component-wise division (1, ··· ,n-1) / (y1, y2, ···, y_{n-1})
+    aa = np.diagflat(y, 1)+np.diagflat(y, -1)    # aa has y as sub and super diagonals
+    t, e_vec = eigh(aa)                          # small symmetric matrix no need to work with sparse
+    w = e_vec[0, :]                              # First row e_vec
+    w = 2*np.power(w, 2)                         # w: quadrature weights shape (n,)
+    w = w.reshape((1, n))                        # now w is reshape to (1, n)
+    return t, w                                  # t: quadrature nodes
+```
+### Quadrature points on the physical elements
 ```py
 def quad_points(x, tt):  # integration pts in the physical elements; t quadrature points in (-1,1), x is the partition
     # Last Modified Wednesday December 18 2018
